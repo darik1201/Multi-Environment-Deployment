@@ -82,9 +82,7 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
         run: |
-          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "cat > '$DEPLOY_PATH/.env.staging'" <<EOF
-          $ENV_FILE_CONTENT
-          EOF
+          printf '%s\n' "$ENV_FILE_CONTENT" | ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "cat > '$DEPLOY_PATH/.env.staging'"
 
       - name: Deploy staging stack
         env:
@@ -96,5 +94,5 @@ jobs:
           ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "
             cd '$DEPLOY_PATH' &&
             docker compose -f docker-compose.staging.yml up -d --build &&
-            curl -fsS http://127.0.0.1:8082/health
+            curl -fsS http://127.0.0.1:8082/nginx-health
           "
