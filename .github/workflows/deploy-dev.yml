@@ -91,5 +91,5 @@ jobs:
           ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "
             cd '$DEPLOY_PATH' &&
             docker compose -f docker-compose.dev.yml up -d --build &&
-            curl -fsS http://127.0.0.1:8081/health
+            curl -fsS http://127.0.0.1:8081/nginx-health
           "
